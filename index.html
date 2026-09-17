@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training For Victa - SanLien</title>
+    <style>
+        :root {
+            --primary-blue: #0056b3;
+            --accent-red: #e60012;
+            --bg-dark: #121214;
+            --card-bg: #1e202e;
+            --text-light: #f8f9fa;
+            --text-muted: #adb5bd;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 90vw;
+            max-width: 1000px;
+            height: 75vh;
+            max-height: 600px;
+            position: relative;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+            border-left: 8px solid var(--primary-blue);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            padding: 30px 40px;
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+            flex-direction: column;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide-tag {
+            font-size: 0.85rem;
+            color: var(--accent-red);
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            margin-bottom: 5px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-top: 10px;
+            color: #ffffff;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #ffffff;
+            border-bottom: 1px solid #444;
+            padding-bottom: 8px;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .agenda-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .agenda-list li {
+            font-size: 1.2rem;
+            padding: 14px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            margin-bottom: 12px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+        }
+
+        .agenda-list li::before {
+            content: "▶";
+            color: var(--accent-red);
+            margin-right: 15px;
+            font-size: 0.9rem;
+        }
+
+        .code-block {
+            background-color: #111216;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.82rem;
+            color: #4af626;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            flex-grow: 1;
+            max-height: 400px;
+        }
+
+        .highlight-text {
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background-color: #151722;
+        }
+
+        th, td {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+
+        .slide-img-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            overflow: hidden;
+            margin-top: 10px;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .slide-img-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .drive-link-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px dashed #444;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .drive-link-box a {
+            color: #4da6ff;
+            font-size: 1.2rem;
+            word-break: break-all;
+            text-decoration: none;
+            padding: 12px 24px;
+            background: rgba(0, 86, 179, 0.2);
+            border: 1px solid var(--primary-blue);
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .drive-link-box a:hover {
+            background: var(--primary-blue);
+            color: #ffffff;
+            box-shadow: 0 0 12px rgba(0, 86, 179, 0.6);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90vw;
+            max-width: 1000px;
+            margin-top: 15px;
+        }
+
+        .nav-btn {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .nav-btn:hover {
+            background-color: #004085;
+        }
+
+        .nav-btn:disabled {
+            background-color: #444;
+            cursor: not-allowed;
+        }
+
+        .page-indicator {
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .thanks-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .thanks-title {
+            font-size: 4.5rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            color: #ffffff;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+
+        <!-- Slide 01: Cover -->
+        <div class="slide active">
+            <div class="slide-tag">Slide 01</div>
+            <div style="margin-top: 40px;">
+                <h1 style="color: var(--accent-red); font-size: 3rem; margin-bottom: 0;">Sanlien</h1>
+                <h1>Training For Victa</h1>
+                <div class="subtitle">Presenter: Jeremy | BU1 2026</div>
+            </div>
+        </div>
+
+        <!-- Slide 02: Outlines -->
+        <div class="slide">
+            <div class="slide-tag">Slide 02</div>
+            <h2>OUTLINES</h2>
+            <ul class="agenda-list">
+                <li>01. pALERT Configuration</li>
+                <li>02. NTP Configuration</li>
+                <li>03. SanDAS Configuration</li>
+            </ul>
+        </div>
+
+        <!-- Slide 03: System Design Philosophies -->
+        <div class="slide">
+            <div class="slide-tag">Slide 03</div>
+            <h2>System Design Philosophies</h2>
+            <div class="subtitle">Architecture & Functional Overview</div>
+            <div class="slide-img-container">
+                <img src="systemphilo.png" alt="System Design Philosophies">
+            </div>
+        </div>
+
+        <!-- Slide 04: Google Drive Link -->
+        <div class="slide">
+            <div class="slide-tag">Slide 04</div>
+            <h2>01. pALERT Configuration</h2>
+            <div class="subtitle">Resource Link</div>
+            <div class="drive-link-box">
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Click the link below to access configuration files and documentation:</p>
+                <a href="https://drive.google.com/file/d/1_gyz_-wqieCW-uqnKwjMmEXpvnFrGlvC/view?usp=drive_link" target="_blank" rel="noopener noreferrer">
+                    📄 Open Google Drive File
+                </a>
+            </div>
+        </div>
+
+        <!-- Slide 05: CUBE Config -->
+        <div class="slide">
+            <div class="slide-tag">Slide 05</div>
+            <h2>FW Ver.6 Configuration - CUBE</h2>
+            <div class="code-block">[PALERT_IP]
+IP 192.168.255.11:502
+STATION_NET TW
+STATION_NAME PP01
+STATION_CH_NAME HL
+STATION_CH_GEO_NAME HH
+<span class="highlight-text">SAMPLING_RATE 100</span>
+<span class="highlight-text">PGA_TRIG_ENABLE YES</span>
+<span class="highlight-text">PGA_WATCH_THRESHOLD 13</span>
+<span class="highlight-text">PGA_WARNING_THRESHOLD 38</span>
+<span class="highlight-text">PGA_ACTION_THRESHOLD 91</span>
+<span class="highlight-text">INSTALLATION_ANGLE 0</span>
+EVENT_MAX_SECONDS 600
+EVENT_MIN_SECONDS 10
+
+[SINGLE_RELAY_MODE] YES
+[RELAY1_GAL] 14
+[RELAY2_GAL] 39
+[RELAY3_GAL] 92
+[RELAY4_GAL] 180</div>
+        </div>
+
+        <!-- Slide 06: MMI Reference Table (Originally Slide 10) -->
+        <div class="slide">
+            <div class="slide-tag">Slide 06</div>
+            <h2>MMI Intensity Reference</h2>
+            <div class="subtitle">Modified Mercalli Intensities (David et al., 1999)</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Intensity</th>
+                        <th>1</th>
+                        <th>2–3</th>
+                        <th>4</th>
+                        <th>5</th>
+                        <th>6</th>
+                        <th>7</th>
+                        <th>8</th>
+                        <th>9</th>
+                        <th>10</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>PGA (Gal)</strong></td>
+                        <td>&lt;1.7</td>
+                        <td>1.7–14</td>
+                        <td>14–39</td>
+                        <td>39–92</td>
+                        <td>92–180</td>
+                        <td>180–340</td>
+                        <td>340–650</td>
+                        <td>650–1240</td>
+                        <td>&gt;1240</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PGV (cm/s)</strong></td>
+                        <td>&lt;0.1</td>
+                        <td>0.1–1.1</td>
+                        <td>1.1–3.4</td>
+                        <td>3.4–8.1</td>
+                        <td>8.1–16</td>
+                        <td>16–31</td>
+                        <td>31–60</td>
+                        <td>60–116</td>
+                        <td>&gt;116</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Slide 07: NTP Config (Originally Slide 11) -->
+        <div class="slide">
+            <div class="slide-tag">Slide 07</div>
+            <h2>02. NTP Configuration</h2>
+            <div class="code-block" style="max-height: 380px; overflow-y: auto;"># /etc/ntp.conf, configuration for ntpd; see ntp.conf(5) for help
+
+driftfile /var/lib/ntp/ntp.drift
+#Enable this if you want statistics to be logged.
+#statsdir /var/log/ntpstats/
+
+statistics loopstats peerstats clockstats
+filegen loopstats file loopstats type day enable
+filegen peerstats file peerstats type day enable
+filegen clockstats file clockstats type day enable
+
+
+# You do need to talk to an NTP server or two (or three).
+#server ntp.your-provider.example
+
+# pool.ntp.org maps to about 1000 low-stratum NTP servers.  Your server will
+# pick a different set every time it starts up.  Please consider joining the
+# pool: &lt;http://www.pool.ntp.org/join.html&gt;
+<span class="highlight-text">server 0.debian.pool.ntp.org minpoll 3 maxpoll 6 iburst</span>
+<span class="highlight-text">server 1.debian.pool.ntp.org minpoll 3 maxpoll 6 iburst prefer</span>
+<span class="highlight-text">server 2.debian.pool.ntp.org minpoll 3 maxpoll 6 iburst prefer</span>
+<span class="highlight-text">server 3.debian.pool.ntp.org minpoll 3 maxpoll 6 iburst prefer</span>
+#end
+
+#server 127.127.1.0
+#fudge 127.127.1.0 statum 10
+
+# Access control configuration; see /usr/share/doc/ntp-doc/html/accopt.html for
+# details.  The web page &lt;http://support.ntp.org/bin/view/Support/AccessRestrictions&gt;
+# might also be helpful.
+#
+# Note that "restrict" applies to both servers and clients, so a configuration
+# that might be intended to block requests from certain clients could also end
+# up blocking replies from your own upstream servers.
+
+# By default, exchange time with everybody, but don't allow configuration.
+restrict -4 default kod notrap nomodify nopeer noquery
+restrict -6 default kod notrap nomodify nopeer noquery
+
+# Local users may interrogate the ntp server more closely.
+restrict 127.0.0.1
+restrict ::1
+
+# Clients from this (example!) subnet have unlimited access, but only if
+# cryptographically authenticated.
+#restrict 192.168.123.0 mask 255.255.255.0 notrust
+
+
+# If you want to provide time to your local subnet, change the next line.
+# (Again, the address is an example only.)
+#broadcast 192.168.123.255
+
+# If you want to listen to time broadcasts on your local subnet, de-comment the
+# next lines.  Please do this only if you trust everybody on the network!
+#disable auth
+#broadcastclient</div>
+        </div>
+
+        <!-- Slide 08: SanDAS Station Settings (Originally Slide 12) -->
+        <div class="slide">
+            <div class="slide-tag">Slide 08</div>
+            <h2>03. SanDAS Configuration - Station Settings</h2>
+            <div class="subtitle">Configured Station Setting & Adding Station Window</div>
+            <div class="slide-img-container">
+                <img src="SanDAS1.png" alt="SanDAS Station Setting">
+            </div>
+        </div>
+
+        <!-- Slide 09: SanDAS Dashboard (Originally Slide 13) -->
+        <div class="slide">
+            <div class="slide-tag">Slide 09</div>
+            <h2>SanDAS - Real-Time Dashboard</h2>
+            <div class="subtitle">Live Waveforms & Seismic Status Monitoring</div>
+            <div class="slide-img-container">
+                <img src="SanDAS2.png" alt="SanDAS Real-Time Dashboard">
+            </div>
+        </div>
+
+        <!-- Slide 10: Thanks (Originally Slide 14) -->
+        <div class="slide">
+            <div class="slide-tag">Slide 10</div>
+            <div class="thanks-section">
+                <div class="thanks-title">THANKS</div>
+                <p style="color: var(--text-muted); font-size: 1.2rem; margin-top: 20px;">Sanlien Technology Corp.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">Previous</button>
+        <div class="page-indicator" id="pageIndicator">Page 1 / 10</div>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const pageIndicator = document.getElementById('pageIndicator');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            pageIndicator.innerText = `Page ${currentSlide + 1} / ${totalSlides}`;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            updateSlide();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        updateSlide();
+    </script>
+
+</body>
+</html>
